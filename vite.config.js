@@ -1,5 +1,5 @@
 export default {
 	optimizeDeps: {
-		include: ['lodash/shuffle'],
+		include: ['lodash/shuffle', 'canvas-confetti'],
 	},
 };

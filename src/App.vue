@@ -12,12 +12,19 @@
 		></game-card>
 	</div>
 
-	<p class="text-teal-400 text-center text-lg font-medium mt-4 bg-gray-700 py-3 bg-opacity-75">{{ unCoverdPairs }} Uncoverd pairs</p>
+	<p class="text-teal-400 text-center text-lg font-medium mt-4 bg-gray-700 py-3 bg-opacity-75">
+		<span v-if="unCoverdPairs">{{ unCoverdPairs }} Uncoverd pairs</span>
+		<span v-else>You Wins!</span>
+	</p>
+	<div v-if="!unCoverdPairs" class="mt-5 text-center">
+		<button class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">Restart Game</button>
+	</div>
 </template>
 
 <script>
-import shuffle from 'lodash/shuffle';
 import { ref, watch, computed } from 'vue';
+import shuffle from 'lodash/shuffle';
+import { launchConfetti } from './utils/confetti.js';
 import GameCard from './components/game-card.vue';
 
 export default {
@@ -53,7 +60,22 @@ export default {
 			pos: i,
 		}));
 
-		const unCoverdPairs = ref(1);
+		const unCoverdPairs = ref(8);
+
+		function restartGame() {
+			cards.value = shuffle(cards.value);
+
+			cards.value = cards.value.map((card, index) => {
+				return {
+					...card,
+					matched: false,
+					pos: index,
+					isFlipped: true,
+				};
+			});
+
+			unCoverdPairs.value = 8;
+		}
 
 		function selectCard(card) {
 			if (selectedCards.value.length < 2) {
@@ -96,7 +118,7 @@ export default {
 
 		watch(unCoverdPairs, (val) => {
 			if (val === 0) {
-				console.log('JI');
+				launchConfetti();
 			}
 		});
 
@@ -104,6 +126,7 @@ export default {
 			cards,
 			selectCard,
 			unCoverdPairs,
+			restartGame,
 		};
 	},
 };

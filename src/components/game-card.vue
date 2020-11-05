@@ -46,7 +46,7 @@ export default {
 		);
 
 		function flip() {
-			if (props.matched) return;
+			if (props.matched || !props.isFlipped) return;
 
 			visible.value = !visible.value;
 			emit('selected', {
