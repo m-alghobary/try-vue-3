@@ -1,6 +1,6 @@
 <template>
 	<div class="w-32 h-32 relative rounded cursor-pointer card" @click="flip">
-		<div class="content absolute inset-0 w-full h-full" :class="{ flip: !isFlipped }">
+		<div class="content absolute inset-0 w-full h-full" :class="{ flip: !visible }">
 			<div
 				class="face bg-teal-300 absolute inset-0 w-full h-full rounded shadow-md flex items-center justify-center text-3xl font-semibold text-pink-500"
 			>
@@ -20,16 +20,24 @@ export default {
 			type: Number,
 			required: true,
 		},
+		isFlipped: {
+			type: Boolean,
+			default: true,
+		},
 	},
-	setup(props) {
-		const isFlipped = ref(true);
+	setup(props, { emit }) {
+		const visible = ref(props.isFlipped);
 
 		function flip() {
-			isFlipped.value = !isFlipped.value;
+			visible.value = !visible.value;
+			emit('selected', {
+				type: props.type,
+				isFlipped: visible.value,
+			});
 		}
 
 		return {
-			isFlipped,
+			visible,
 			flip,
 		};
 	},
