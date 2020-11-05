@@ -1,5 +1,5 @@
 <template>
-	<h1 class="text-center mt-6 text-2xl">Peek-A-Vue</h1>
+	<img src="/img/title.png" class="mx-auto mt-5" />
 	<div class="max-w-2xl mt-5 mx-auto p-4 grid grid-cols-4 grid-rows-4 gap-4">
 		<game-card v-for="(card, index) in cards" :key="index" :type="card"></game-card>
 	</div>
@@ -27,3 +27,10 @@ export default {
 	},
 };
 </script>
+
+<style>
+body {
+	background-image: url('/img/page-bg.png');
+	background-color: #333;
+}
+</style>
