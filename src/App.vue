@@ -1,23 +1,26 @@
 <template>
 	<img src="/img/title.png" class="mx-auto mt-5" />
-	<div class="max-w-xl mt-5 mx-auto p-4 grid grid-cols-4 grid-rows-4 gap-6">
+	<transition-group tag="section" class="max-w-xl mt-5 mx-auto p-4 grid grid-cols-4 grid-rows-4 gap-6" name="shuffle-card">
 		<game-card
-			v-for="(card, index) in cards"
-			:key="index"
+			v-for="card in cards"
+			:key="`card-${card.type}-${card.order}`"
 			:type="card.type"
 			:matched="card.matched"
 			:isFlipped="card.isFlipped"
 			:pos="card.pos"
 			@selected="selectCard"
 		></game-card>
-	</div>
+	</transition-group>
 
 	<p class="text-teal-400 text-center text-lg font-medium mt-4 bg-gray-700 py-3 bg-opacity-75">
 		<span v-if="unCoverdPairs">{{ unCoverdPairs }} Uncoverd pairs</span>
 		<span v-else>You Wins!</span>
 	</p>
-	<div v-if="!unCoverdPairs" class="mt-5 text-center">
-		<button class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">Restart Game</button>
+	<div class="mt-5 text-center">
+		<button class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">
+			<span v-if="!unCoverdPairs"> Restart Game </span>
+			<span v-else> Start Game </span>
+		</button>
 	</div>
 </template>
 
@@ -40,9 +43,10 @@ export default {
 		types.forEach((type, i) => {
 			cards.value.push({
 				type,
-				isFlipped: true,
+				isFlipped: false,
 				matched: false,
 				pos: null,
+				order: 1,
 			});
 
 			cards.value.push({
@@ -50,10 +54,9 @@ export default {
 				isFlipped: true,
 				matched: false,
 				pos: null,
+				order: 2,
 			});
 		});
-
-		cards.value = shuffle(cards.value);
 
 		cards.value = cards.value.map((card, i) => ({
 			...card,
@@ -64,6 +67,7 @@ export default {
 
 		function restartGame() {
 			cards.value = shuffle(cards.value);
+			console.log(cards.value);
 
 			cards.value = cards.value.map((card, index) => {
 				return {
@@ -136,5 +140,9 @@ export default {
 body {
 	background-image: url('/img/page-bg.png');
 	background-color: #333;
+}
+
+.shuffle-card-move {
+	transition: transform 0.8s ease-in;
 }
 </style>
