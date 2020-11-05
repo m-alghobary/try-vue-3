@@ -1,18 +1,19 @@
 <template>
-	<div class="w-32 h-32 relative rounded cursor-pointer card" @click="flip">
-		<div class="content absolute inset-0 w-full h-full" :class="{ flip: !visible }">
+	<div :class="{ 'cursor-pointer': !matched }" class="w-32 h-32 relative rounded card" @click="flip">
+		<div class="content absolute inset-0 w-full h-full rounded" :class="{ flip: !visible }">
 			<div
-				class="face bg-teal-300 absolute inset-0 w-full h-full rounded shadow-md flex items-center justify-center text-3xl font-semibold text-pink-500"
+				:class="{ 'border-4 border-green-500': matched }"
+				class="face bg-teal-200 absolute inset-0 rounded shadow-md flex items-center justify-center"
 			>
-				{{ type }}
+				<span class="text-5xl font-bold text-pink-500">{{ type }}</span>
 			</div>
-			<div class="back bg-teal-400 absolute inset-0 w-full h-full rounded shadow-md"></div>
+			<div class="back bg-teal-400 absolute inset-0 rounded shadow-md"></div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 export default {
 	props: {
@@ -24,15 +25,34 @@ export default {
 			type: Boolean,
 			default: true,
 		},
+		matched: {
+			type: Boolean,
+			default: false,
+		},
+		pos: {
+			type: Number,
+			required: true,
+		},
 	},
 	setup(props, { emit }) {
-		const visible = ref(props.isFlipped);
+		const visible = ref(true);
+
+		watch(
+			() => props.isFlipped,
+			(val) => {
+				visible.value = val;
+			},
+			{ immediate: true }
+		);
 
 		function flip() {
+			if (props.matched) return;
+
 			visible.value = !visible.value;
 			emit('selected', {
 				type: props.type,
 				isFlipped: visible.value,
+				pos: props.pos,
 			});
 		}
 
