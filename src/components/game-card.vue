@@ -1,5 +1,5 @@
 <template>
-	<div :class="{ 'cursor-pointer': !matched }" class="w-24 h-24 relative rounded card" @click="flip">
+	<div :class="{ 'cursor-pointer': !matched }" class="w-16 sm:w-24 h-16 sm:h-24 relative rounded card" @click="flip">
 		<div class="content absolute inset-0 w-full h-full rounded" :class="{ flip: !visible }">
 			<div
 				:class="{ 'border-4 border-green-500': matched }"
