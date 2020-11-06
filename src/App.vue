@@ -1,25 +1,34 @@
 <template>
 	<img src="/img/title.png" class="mx-auto mt-5" />
-	<transition-group tag="section" class="max-w-xl mt-5 mx-auto p-4 grid grid-cols-4 grid-rows-4 gap-6" name="shuffle-card">
-		<game-card
-			v-for="card in cards"
-			:key="`card-${card.type}-${card.order}`"
-			:type="card.type"
-			:matched="card.matched"
-			:isFlipped="card.isFlipped"
-			:pos="card.pos"
-			@selected="selectCard"
-		></game-card>
-	</transition-group>
+	<div class="max-w-xl mx-auto mt-5 relative">
+		<transition-group tag="section" class="p-4 grid grid-cols-4 grid-rows-4 gap-6" name="shuffle-card">
+			<game-card
+				v-for="card in cards"
+				:key="`card-${card.type}-${card.order}`"
+				:type="card.type"
+				:matched="card.matched"
+				:isFlipped="card.isFlipped"
+				:pos="card.pos"
+				@selected="selectCard"
+			></game-card>
+		</transition-group>
+
+		<div
+			v-if="isNewGame"
+			class="absolute inset-0 w-full h-full bg-gray-900 rounded flex flex-col items-center justify-center text-4xl text-white bg-opacity-75"
+		>
+			<span>Welcom</span>
+			<button class="bg-green-500 text-white text-lg font-medium mt-4 block p-4 rounded-full" @click="restartGame">Play</button>
+		</div>
+	</div>
 
 	<p class="text-teal-400 text-center text-lg font-medium mt-4 bg-gray-700 py-3 bg-opacity-75">
 		<span v-if="unCoverdPairs">{{ unCoverdPairs }} Uncoverd pairs</span>
 		<span v-else>You Wins!</span>
 	</p>
 	<div class="mt-5 text-center">
-		<button class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">
-			<span v-if="!unCoverdPairs"> Restart Game </span>
-			<span v-else> Start Game </span>
+		<button v-if="!unCoverdPairs" class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">
+			<span> Restart Game </span>
 		</button>
 	</div>
 </template>
@@ -38,6 +47,7 @@ export default {
 	setup() {
 		const cards = ref([]);
 		const selectedCards = ref([]);
+		const isNewGame = ref(true);
 		const types = [1, 2, 3, 4, 5, 6, 7, 8];
 
 		types.forEach((type, i) => {
@@ -66,6 +76,8 @@ export default {
 		const unCoverdPairs = ref(8);
 
 		function restartGame() {
+			isNewGame.value = false;
+
 			cards.value = shuffle(cards.value);
 			console.log(cards.value);
 
@@ -131,6 +143,7 @@ export default {
 			selectCard,
 			unCoverdPairs,
 			restartGame,
+			isNewGame,
 		};
 	},
 };
