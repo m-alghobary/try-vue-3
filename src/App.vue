@@ -1,6 +1,8 @@
 <template>
-	<img src="/img/title.png" class="mx-auto mt-5" />
-	<div class="max-w-xl mx-auto mt-5 relative">
+	<h1 class="text-6xl text-center font-extrabold mt-4 bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 via-green-500 to-yellow-500">
+		Peek A Card
+	</h1>
+	<div class="max-w-xl mx-auto mt-2 relative">
 		<transition-group tag="section" class="p-4 grid grid-cols-4 grid-rows-4 gap-6" name="shuffle-card">
 			<game-card
 				v-for="card in cards"
@@ -13,12 +15,25 @@
 			></game-card>
 		</transition-group>
 
-		<div
-			v-if="isNewGame"
-			class="absolute inset-0 w-full h-full bg-gray-900 rounded flex flex-col items-center justify-center text-4xl text-white bg-opacity-75"
-		>
-			<span>Welcom</span>
-			<button class="bg-green-500 text-white text-lg font-medium mt-4 block p-4 rounded-full" @click="restartGame">Play</button>
+		<div v-if="isNewGame || !unCoverdPairs" class="absolute inset-0 w-full h-full bg-gray-900 rounded text-4xl text-white bg-opacity-75">
+			<div v-if="!unCoverdPairs" class="flex flex-col h-full items-center justify-center">
+				<span>You Wins!</span>
+				<button
+					class="bg-gradient-to-r from-green-400 to-teal-500 text-white text-lg font-medium mt-4 block py-4 px-8 rounded-full"
+					@click="restartGame"
+				>
+					Replay
+				</button>
+			</div>
+			<div v-else class="flex flex-col h-full items-center justify-center">
+				<span>Welcom</span>
+				<button
+					class="bg-gradient-to-r from-green-400 to-teal-500 text-white text-lg font-medium mt-4 block py-4 px-8 rounded-full"
+					@click="restartGame"
+				>
+					Play
+				</button>
+			</div>
 		</div>
 	</div>
 
@@ -26,11 +41,6 @@
 		<span v-if="unCoverdPairs">{{ unCoverdPairs }} Uncoverd pairs</span>
 		<span v-else>You Wins!</span>
 	</p>
-	<div class="mt-5 text-center">
-		<button v-if="!unCoverdPairs" class="bg-green-500 text-white py-2 px-4 rounded" @click="restartGame">
-			<span> Restart Game </span>
-		</button>
-	</div>
 </template>
 
 <script>
